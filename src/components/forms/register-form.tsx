@@ -27,7 +27,7 @@ const RegisterForm = () => {
           <div className='flex gap-2 items-start md:flex-row flex-col'>
             <FormField
               control={form.control}
-              name='firstname'
+              name='firstName'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>First name</FormLabel>
@@ -40,7 +40,7 @@ const RegisterForm = () => {
             />
             <FormField
               control={form.control}
-              name='lastname'
+              name='lastName'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Last name</FormLabel>
