@@ -9,20 +9,39 @@ import {
   Form,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { registerAction } from "@/lib/actions";
 import { RegisterSchema, RegisterType } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useState, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 const RegisterForm = () => {
+  const [error, setError] = useState<string>();
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<RegisterType>({
     resolver: zodResolver(RegisterSchema),
+    defaultValues: {
+      email: "",
+      firstName: "",
+      lastName: "",
+      password: "",
+    },
   });
 
-  const onSubmit: SubmitHandler<RegisterType> = () => {};
+  const onSubmit: SubmitHandler<RegisterType> = async (values) => {
+    setError(undefined);
+
+    startTransition(async () => {
+      const { error } = await registerAction(values);
+      if (error) setError(error);
+    });
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+        {error ? <p className='text-center text-destructive'>{error}</p> : null}
         <div className='space-y-2'>
           <div className='flex gap-2 items-start md:flex-row flex-col'>
             <FormField
@@ -72,14 +91,16 @@ const RegisterForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder='Password' {...field} />
+                  <Input placeholder='Password' type='password' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-        <Button className='w-full'>Sign Up</Button>
+        <Button className='w-full'>
+          {isPending ? "Loading ...." : "Sign up"}
+        </Button>
       </form>
     </Form>
   );

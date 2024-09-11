@@ -1,5 +1,5 @@
-import LoginForm from "@/components/forms/login-form";
-import RegisterForm from "@/components/forms/register-form";
+import LoginForm from "@/app/auth/login-form";
+import RegisterForm from "@/app/auth/register-form";
 import {
   Card,
   CardContent,
